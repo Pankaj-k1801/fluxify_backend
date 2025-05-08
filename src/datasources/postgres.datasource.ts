@@ -5,11 +5,11 @@ const config = {
   name: 'postgres',
   connector: 'postgresql',
   url: '',
-  host: '',
-  port: 0,
-  user: '',
-  password: '',
-  database: ''
+  host: 'localhost',
+  port: 5432,
+  user: 'postgres',
+  password: 'pankaj@123',
+  database: 'FluxifyDB'
 };
 
 // Observe application's life cycle to disconnect the datasource when
