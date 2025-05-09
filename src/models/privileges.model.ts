@@ -79,6 +79,8 @@ export class Privileges extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Privileges>) {
     super(data);
   }

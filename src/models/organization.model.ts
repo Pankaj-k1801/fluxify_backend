@@ -81,6 +81,8 @@ export class Organization extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Organization>) {
     super(data);
   }

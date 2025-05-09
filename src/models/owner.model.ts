@@ -74,6 +74,8 @@ export class Owner extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Owner>) {
     super(data);
   }

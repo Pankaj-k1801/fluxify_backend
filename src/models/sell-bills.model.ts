@@ -95,6 +95,8 @@ export class SellBills extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<SellBills>) {
     super(data);
   }

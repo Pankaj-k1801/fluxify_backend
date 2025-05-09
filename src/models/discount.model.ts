@@ -65,11 +65,12 @@ export class Discount extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Discount>) {
     super(data);
   }
 }
-
 
 export interface DiscountRelations {
 

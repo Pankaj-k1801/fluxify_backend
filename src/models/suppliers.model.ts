@@ -81,6 +81,8 @@ export class Suppliers extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Suppliers>) {
     super(data);
   }

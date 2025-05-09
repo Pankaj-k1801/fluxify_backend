@@ -89,6 +89,8 @@ export class Purchase extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Purchase>) {
     super(data);
   }

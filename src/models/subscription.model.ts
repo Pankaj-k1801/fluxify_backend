@@ -75,6 +75,8 @@ export class Subscription extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Subscription>) {
     super(data);
   }

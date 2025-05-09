@@ -118,6 +118,7 @@ export class Stock extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
 
   constructor(data?: Partial<Stock>) {
     super(data);

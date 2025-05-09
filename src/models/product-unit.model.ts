@@ -65,6 +65,8 @@ export class ProductUnit extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<ProductUnit>) {
     super(data);
   }

@@ -74,6 +74,8 @@ export class PaymentType extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<PaymentType>) {
     super(data);
   }

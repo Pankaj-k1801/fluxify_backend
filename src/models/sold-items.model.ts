@@ -131,12 +131,12 @@ export class SoldItems extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
 
   constructor(data?: Partial<SoldItems>) {
     super(data);
   }
 }
-
 
 export interface SoldItemsRelations {
 

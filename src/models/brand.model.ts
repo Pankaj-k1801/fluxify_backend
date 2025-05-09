@@ -65,6 +65,8 @@ export class Brand extends Entity {
   })
   updatedBy: string;
 
+  /* Relations */
+
   constructor(data?: Partial<Brand>) {
     super(data);
   }
