@@ -1,4 +1,4 @@
-import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 import {Organization} from './organization.model';
 
 @model()
@@ -157,8 +157,6 @@ export class BranchUnit extends Entity {
   updatedBy: string;
 
   /* Relations */
-  @belongsTo(() => Organization)
-  organizationId: string;
 
   constructor(data?: Partial<BranchUnit>) {
     super(data);
