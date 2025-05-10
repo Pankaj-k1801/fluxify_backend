@@ -21,6 +21,11 @@ export class Owner extends Entity {
 
   @property({
     type: 'string',
+  })
+  userId: string;
+
+  @property({
+    type: 'string',
     required: true,
   })
   ownerName: string;

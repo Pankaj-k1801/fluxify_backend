@@ -18,3 +18,4 @@ export * from './staff.controller';
 export * from './stock.controller';
 export * from './subscription.controller';
 export * from './suppliers.controller';
+export * from './users.controller';

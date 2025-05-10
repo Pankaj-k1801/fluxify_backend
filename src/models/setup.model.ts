@@ -20,6 +20,12 @@ export class Setup extends Entity {
   })
   nextOrgId: string; // o-1000
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  nextUserId: string; // o-1000
+
   /* Relations */
 
   constructor(data?: Partial<Setup>) {

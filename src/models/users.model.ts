@@ -1,7 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model()
-export class Staff extends Entity {
+export class Users extends Entity {
   @property({
     type: 'string',
     id: true,
@@ -17,51 +17,78 @@ export class Staff extends Entity {
     type: 'string',
     required: true
   })
-  orgId: string;
-
-  @property({
-    type: 'string',
-  })
   userId: string;
 
   @property({
     type: 'string',
     required: true
   })
-  staffId: string;
-
-  @property({
-    type: 'string',
-    required: true
-  })
-  name: string;
+  orgId: string;
 
   @property({
     type: 'string',
   })
-  add: string;
+  branchId: string;
 
   @property({
     type: 'string',
-    required: true
+    required: true,
+    postgresql: {
+      columnName: 'google_id',
+      dataType: 'varchar',
+      length: 255,
+    },
   })
-  phone: string;
+  googleId: string;
 
   @property({
     type: 'string',
+    required: true,
+    postgresql: {
+      columnName: 'email',
+      dataType: 'varchar',
+      length: 255,
+    },
   })
   email: string;
 
   @property({
-    type: 'boolean',
-    required: true,
+    type: 'string',
+    postgresql: {
+      columnName: 'name',
+      dataType: 'varchar',
+      length: 255,
+    },
   })
-  isManager: boolean;
+  name?: string;
 
   @property({
     type: 'string',
+    postgresql: {
+      columnName: 'picture_url',
+      dataType: 'varchar',
+      length: 255,
+    },
   })
-  assignedBranch: string;
+  pictureUrl?: string;
+
+  @property({
+    type: 'string',
+    required: true,
+    postgresql: {
+      columnName: 'role',
+      dataType: 'varchar',
+      length: 50,
+    },
+  })
+  role: string;
+
+  @property({
+    type: 'date',
+    required: true,
+    postgresql: {dataType: 'timestamp with time zone'},
+  })
+  lastLoginTime: string;
 
   /* For Logs */
   @property({
@@ -92,11 +119,11 @@ export class Staff extends Entity {
 
   /* Relations */
 
-  constructor(data?: Partial<Staff>) {
+  constructor(data?: Partial<Users>) {
     super(data);
   }
 }
 
-export interface StaffRelations {
+export interface UsersRelations {
 
 }

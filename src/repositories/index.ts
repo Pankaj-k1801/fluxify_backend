@@ -17,3 +17,4 @@ export * from './staff.repository';
 export * from './stock.repository';
 export * from './subscription.repository';
 export * from './suppliers.repository';
+export * from './users.repository';
