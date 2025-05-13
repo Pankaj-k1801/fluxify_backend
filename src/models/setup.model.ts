@@ -24,7 +24,7 @@ export class Setup extends Entity {
     type: 'string',
     required: true,
   })
-  nextUserId: string; // o-1000
+  nextUserId: string; // u-1000
 
   /* Relations */
 

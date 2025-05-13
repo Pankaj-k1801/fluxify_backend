@@ -23,23 +23,13 @@ export class Users extends Entity {
     type: 'string',
     required: true
   })
-  orgId: string;
+  firstName: string;
 
   @property({
     type: 'string',
+    required: true
   })
-  branchId: string;
-
-  @property({
-    type: 'string',
-    required: true,
-    postgresql: {
-      columnName: 'google_id',
-      dataType: 'varchar',
-      length: 255,
-    },
-  })
-  googleId: string;
+  lastName: string;
 
   @property({
     type: 'string',
@@ -54,34 +44,29 @@ export class Users extends Entity {
 
   @property({
     type: 'string',
-    postgresql: {
-      columnName: 'name',
-      dataType: 'varchar',
-      length: 255,
-    },
-  })
-  name?: string;
-
-  @property({
-    type: 'string',
-    postgresql: {
-      columnName: 'picture_url',
-      dataType: 'varchar',
-      length: 255,
-    },
-  })
-  pictureUrl?: string;
-
-  @property({
-    type: 'string',
     required: true,
     postgresql: {
-      columnName: 'role',
       dataType: 'varchar',
-      length: 50,
+      length: 255,
     },
   })
-  role: string;
+  password: string;
+
+  @property({
+    type: 'string',
+    required: false,
+    postgresql: {
+      dataType: 'varchar',
+      length: 20,
+    },
+  })
+  phone?: string;
+
+  @property({
+    type: 'boolean',
+    required: true,
+  })
+  isLoggedIn?: boolean;
 
   @property({
     type: 'date',
@@ -89,6 +74,12 @@ export class Users extends Entity {
     postgresql: {dataType: 'timestamp with time zone'},
   })
   lastLoginTime: string;
+
+  @property({
+    type: 'boolean',
+    required: true,
+  })
+  isOwner?: boolean;
 
   /* For Logs */
   @property({
@@ -107,13 +98,11 @@ export class Users extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   createdBy: string;
 
   @property({
     type: 'string',
-    required: true,
   })
   updatedBy: string;
 
