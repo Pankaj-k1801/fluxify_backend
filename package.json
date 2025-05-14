@@ -55,6 +55,7 @@
     "@loopback/rest": "^14.0.13",
     "@loopback/rest-explorer": "^7.0.13",
     "@loopback/service-proxy": "^7.0.13",
+    "jsonwebtoken": "^9.0.2",
     "loopback-connector-postgresql": "^7.2.0",
     "tslib": "^2.0.0"
   },
