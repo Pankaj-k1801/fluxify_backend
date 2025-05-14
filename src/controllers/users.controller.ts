@@ -1,3 +1,4 @@
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,28 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {Signup} from '../dtos/signup.dto';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
+import {UserService} from '../services';
 
 export class UsersController {
   constructor(
     @repository(UsersRepository)
-    public usersRepository : UsersRepository,
-  ) {}
+    public usersRepository: UsersRepository,
+    @inject('services.UserService')
+    private userService: UserService,
+  ) { }
 
   @post('/users')
   @response(200, {
@@ -37,7 +42,7 @@ export class UsersController {
         'application/json': {
           schema: getModelSchemaRef(Users, {
             title: 'NewUsers',
-            
+
           }),
         },
       },
@@ -146,5 +151,23 @@ export class UsersController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.usersRepository.deleteById(id);
+  }
+
+  @post('/signup')
+  @response(200, {
+    description: 'Signup new user',
+    content: {'application/json': {schema: getModelSchemaRef(Users)}},
+  })
+  async signup(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Signup),
+        },
+      },
+    })
+    signupData: Signup,
+  ): Promise<Users> {
+    return this.userService.signup(signupData);
   }
 }

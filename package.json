@@ -55,6 +55,7 @@
     "@loopback/rest": "^14.0.13",
     "@loopback/rest-explorer": "^7.0.13",
     "@loopback/service-proxy": "^7.0.13",
+    "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "loopback-connector-postgresql": "^7.2.0",
     "tslib": "^2.0.0"
@@ -63,6 +64,7 @@
     "@loopback/build": "^11.0.11",
     "@loopback/eslint-config": "^15.0.5",
     "@loopback/testlab": "^7.0.12",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^16.18.126",
     "eslint": "^8.57.1",
     "source-map-support": "^0.5.21",
