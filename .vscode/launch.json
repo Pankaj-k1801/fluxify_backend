@@ -1,13 +1,63 @@
+// {
+//   "configurations": [
+//     {
+//       "type": "node",
+//       "request": "launch",
+//       "name": "Launch Program",
+//       "skipFiles": [
+//         "<node_internals>/**"
+//       ],
+//       "program": "${workspaceFolder}/dist/index.js",
+//     },
+//     {
+//       "type": "node",
+//       "request": "launch",
+//       "name": "Run Mocha tests",
+//       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+//       "runtimeArgs": [
+//         "-r",
+//         "${workspaceRoot}/node_modules/source-map-support/register"
+//       ],
+//       "cwd": "${workspaceRoot}",
+//       "autoAttachChildProcesses": true,
+//       "args": [
+//         "--config",
+//         "${workspaceRoot}/.mocharc.json",
+//         "${workspaceRoot}/dist/__tests__/**/*.js",
+//         "-t",
+//         "0"
+//       ]
+//     },
+//     {
+//       "type": "node",
+//       "request": "attach",
+//       "name": "Attach to Process",
+//       "port": 5858
+//     }
+//   ]
+// }
+
 {
+  "version": "0.2.0",
   "configurations": [
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [
-        "<node_internals>/**"
+      "name": "Debug LoopBack App (ts-node)",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
       ],
-      "program": "${workspaceFolder}/dist/index.js",
+      "args": ["${workspaceFolder}/src/index.ts"],
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
+      },
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal"
     },
     {
       "type": "node",
@@ -16,23 +66,20 @@
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "runtimeArgs": [
         "-r",
-        "${workspaceRoot}/node_modules/source-map-support/register"
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register",
+        "-r",
+        "source-map-support/register"
+      ],
+      "args": [
+        "src/__tests__/**/*.ts",
+        "-t",
+        "999999"
       ],
       "cwd": "${workspaceRoot}",
       "autoAttachChildProcesses": true,
-      "args": [
-        "--config",
-        "${workspaceRoot}/.mocharc.json",
-        "${workspaceRoot}/dist/__tests__/**/*.js",
-        "-t",
-        "0"
-      ]
-    },
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Attach to Process",
-      "port": 5858
+      "console": "integratedTerminal"
     }
   ]
 }

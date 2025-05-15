@@ -25,6 +25,7 @@
     "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
     "posttest": "npm run lint",
     "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "docker:build": "docker build -t fluxify_backend .",
     "docker:run": "docker run -p 3000:3000 -d fluxify_backend",
     "premigrate": "npm run build",
@@ -68,6 +69,8 @@
     "@types/node": "^16.18.126",
     "eslint": "^8.57.1",
     "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "~5.2.2"
   }
 }
