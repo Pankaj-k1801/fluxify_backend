@@ -1,11 +1,11 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
@@ -34,9 +34,23 @@ export class FluxifyBackendApplication extends BootMixin(
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
       controllers: {
-        // Customize ControllerBooter Conventions here
         dirs: ['controllers'],
-        extensions: ['.controller.js'],
+        extensions: ['.controller.js', '.controller.ts'],
+        nested: true,
+      },
+      repositories: {
+        dirs: ['repositories'],
+        extensions: ['.repository.js', '.repository.ts'],
+        nested: true,
+      },
+      datasources: {
+        dirs: ['datasources'],
+        extensions: ['.datasource.js', '.datasource.ts'],
+        nested: true,
+      },
+      services: {
+        dirs: ['services'],
+        extensions: ['.service.js', '.service.ts'],
         nested: true,
       },
     };
