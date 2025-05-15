@@ -1,3 +1,14 @@
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// Load environment variables based on NODE_ENV
+const nodeEnv = process.env.NODE_ENV || 'development';
+const envPath = path.resolve(process.cwd(), `.env.${nodeEnv}`);
+dotenv.config({path: envPath});
+
+// Fallback to .env if .env.{env} doesn't exist
+dotenv.config();
+
 import {ApplicationConfig, FluxifyBackendApplication} from './application';
 
 export * from './application';
