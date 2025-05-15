@@ -1,4 +1,13 @@
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
 import {FluxifyBackendApplication} from './application';
+
+// Load environment variables like in main.ts
+const nodeEnv = process.env.NODE_ENV || 'development';
+const envPath = path.resolve(process.cwd(), `.env.${nodeEnv}`);
+dotenv.config({path: envPath});
+dotenv.config(); // fallback
 
 export async function migrate(args: string[]) {
   const existingSchema = args.includes('--rebuild') ? 'drop' : 'alter';

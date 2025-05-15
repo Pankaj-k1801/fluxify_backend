@@ -11,6 +11,7 @@ export * from './product.model';
 export * from './purchase-items.model';
 export * from './purchase.model';
 export * from './sell-bills.model';
+export * from './session.model';
 export * from './setup.model';
 export * from './sold-items.model';
 export * from './staff.model';
