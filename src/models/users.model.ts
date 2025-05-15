@@ -81,6 +81,12 @@ export class Users extends Entity {
   })
   isOwner?: boolean;
 
+  @property({
+    type: 'boolean',
+    required: true,
+  })
+  isActive?: boolean;
+
   /* For Logs */
   @property({
     type: 'date',

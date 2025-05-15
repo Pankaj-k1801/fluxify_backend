@@ -22,7 +22,6 @@ export class Session extends Entity {
     type: 'string',
     required: true,
     postgresql: {
-      columnName: 'user_id',
       dataType: 'varchar',
       dataLength: 36,
     },
@@ -51,10 +50,7 @@ export class Session extends Entity {
 
   @property({
     type: 'object',
-    postgresql: {
-      columnName: 'session_data',
-      dataType: 'jsonb',
-    },
+    postgresql: {dataType: 'jsonb'},
   })
   sessionData?: object;
 

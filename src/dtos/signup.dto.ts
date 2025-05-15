@@ -18,3 +18,12 @@ export class Signup extends Model {
   @property({type: 'string', required: false})
   phone?: string;
 }
+
+@model()
+export class Login extends Model {
+  @property({type: 'string', required: true})
+  email: string;
+
+  @property({type: 'string', required: true})
+  password: string;
+}

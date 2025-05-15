@@ -18,7 +18,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Signup} from '../dtos/signup.dto';
+import {Login, Signup} from '../dtos/signup.dto';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
 import {UserService} from '../services';
@@ -170,4 +170,33 @@ export class UsersController {
   ): Promise<Users> {
     return this.userService.signup(signupData);
   }
+
+  @post('/login')
+  @response(200, {
+    description: 'Login existing user',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            token: {type: 'string'},
+            user: getModelSchemaRef(Users),
+          },
+        },
+      },
+    },
+  })
+  async login(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(Login),
+        },
+      },
+    })
+    loginData: Login,
+  ): Promise<{token: string; user: Users}> {
+    return this.userService.login(loginData);
+  }
 }
+
