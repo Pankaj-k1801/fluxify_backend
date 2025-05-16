@@ -5,16 +5,6 @@ export class Users extends Entity {
   @property({
     type: 'string',
     id: true,
-    generated: true,
-    postgresql: {
-      dataType: 'uuid',
-      default: 'uuid_generate_v4()',
-    },
-  })
-  id: string;
-
-  @property({
-    type: 'string',
     required: true
   })
   userId: string;

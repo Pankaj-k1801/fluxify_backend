@@ -5,7 +5,7 @@ import {Session, SessionRelations} from '../models';
 
 export class SessionRepository extends DefaultCrudRepository<
   Session,
-  typeof Session.prototype.id,
+  typeof Session.prototype.userId,
   SessionRelations
 > {
   constructor(

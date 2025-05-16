@@ -42,6 +42,7 @@ export class UserService {
       createdDate: new Date().toISOString(),
       upDatedDate: new Date().toISOString(),
       isLoggedIn: false,
+      isActive: true,
       lastLoginTime: new Date().toISOString(),
       isOwner: false,
       createdBy: 'system',
@@ -55,7 +56,7 @@ export class UserService {
   async login(loginData: Login): Promise<{token: string; user: Users}> {
     const {email, password} = loginData;
 
-    // Step 1: Find user by email
+    // Find user by email
     const user = await this.usersRepository.findOne({where: {email}});
     if (!user) {
       throw new HttpErrors.Unauthorized('No user with this Email');
@@ -66,16 +67,22 @@ export class UserService {
       throw new HttpErrors.Unauthorized('User is Not Active');
     }
 
-    // Step 2: Verify password
+    // Verify password
     const isMatch = await this.passwordService.comparePassword(password, user.password);
     if (!isMatch) {
       throw new HttpErrors.Unauthorized('Invalid Password');
     }
 
-    // Step 3: Generate token (Random bytes used as Token for Security)
+    // Update isLoggedIn and lastLoginTime in Users table
+    await this.usersRepository.updateById(user.userId, {
+      isLoggedIn: true,
+      lastLoginTime: new Date().toISOString(),
+    });
+
+    // Generate token (Random bytes used as Token for Security)
     const token = randomBytes(32).toString('hex');
 
-    // Step 4: Create session entry
+    // Create session entry
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 1000 * 60 * 60 * 12); // 12 hours
 

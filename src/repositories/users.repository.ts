@@ -5,7 +5,7 @@ import {Users, UsersRelations} from '../models/users.model';
 
 export class UsersRepository extends DefaultCrudRepository<
   Users,
-  typeof Users.prototype.id,
+  typeof Users.prototype.userId,
   UsersRelations
 > {
   constructor(
