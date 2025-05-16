@@ -62,7 +62,7 @@ export class UserService {
       throw new HttpErrors.Unauthorized('No user with this Email');
     }
 
-    /* Checking is User is Active or Not  */
+    /* Checking if User is Active or Not  */
     if (!user.isActive) {
       throw new HttpErrors.Unauthorized('User is Not Active');
     }
@@ -79,12 +79,34 @@ export class UserService {
       lastLoginTime: new Date().toISOString(),
     });
 
-    // Generate token (Random bytes used as Token for Security)
-    const token = randomBytes(32).toString('hex');
+
+    // Check if an active session already exists
+    const existingSession = await this.sessionRepository.findOne({
+      where: {
+        userId: user.userId,
+        expiresAt: {gt: new Date()}, // session not expired
+      },
+    });
 
     // Create session entry
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 1000 * 60 * 60 * 12); // 12 hours
+
+    if (existingSession) {
+      // Extend session expiry time
+      await this.sessionRepository.updateById(existingSession.userId, {
+        expiresAt,
+      });
+
+      return {
+        token: existingSession.token,
+        user,
+      };
+    }
+
+    // Otherwise, create a new session
+    // Generate token (Random bytes used as Token for Security)
+    const token = randomBytes(32).toString('hex');
 
     const session: Partial<Session> = {
       userId: user.userId,
