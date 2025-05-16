@@ -21,6 +21,12 @@ export class Session extends Entity {
   @property({
     type: 'string',
     required: true,
+  })
+  token: string;
+
+  @property({
+    type: 'string',
+    required: true,
     postgresql: {
       dataType: 'varchar',
       dataLength: 36,

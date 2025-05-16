@@ -81,6 +81,7 @@ export class UserService {
 
     const session: Partial<Session> = {
       userId: user.userId,
+      token: token,
       orgId: 'org-1000', // Default Org Id for Now Later we will use Actual OrgId
       createdAt: now,
       expiresAt,
