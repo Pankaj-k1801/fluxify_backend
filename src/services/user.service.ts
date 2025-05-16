@@ -126,7 +126,32 @@ export class UserService {
       user,
     };
   }
+
+  /* User Logout */
+  async logout(userId: string, token: string): Promise<{message: string}> {
+    // Find the session for this user and token
+    const existingSession = await this.sessionRepository.findOne({
+      where: {
+        userId,
+        token,
+      },
+    });
+
+    if (!existingSession) {
+      throw new HttpErrors.Unauthorized('Invalid session or already logged out');
+    }
+
+    // Delete session or mark as expired
+    await this.sessionRepository.deleteById(userId); // If userId is primary key
+
+    // Update isLoggedIn status in Users table
+    await this.usersRepository.updateById(userId, {
+      isLoggedIn: false,
+    });
+
+    return {
+      message: 'User successfully logged out',
+    };
+  }
+
 }
-
-
-

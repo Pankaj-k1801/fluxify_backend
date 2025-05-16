@@ -11,6 +11,7 @@ import {
   del,
   get,
   getModelSchemaRef,
+  HttpErrors,
   param,
   patch,
   post,
@@ -18,7 +19,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Login, Signup} from '../dtos/signup.dto';
+import {Login, LogoutDto, Signup} from '../dtos/signup.dto';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
 import {UserService} from '../services';
@@ -198,5 +199,26 @@ export class UsersController {
   ): Promise<{token: string; user: Users}> {
     return this.userService.login(loginData);
   }
+
+  @post('/logout', {
+    responses: {
+      '200': {
+        description: 'Logout  existing user',
+        content: {'application/json': {schema: {type: 'object'}}},
+      },
+    },
+  })
+  async logout(
+    @requestBody() logoutDto: LogoutDto,
+  ): Promise<{message: string}> {
+    const {userId, token} = logoutDto;
+
+    if (!userId || !token) {
+      throw new HttpErrors.BadRequest('userId and token are required');
+    }
+
+    return this.userService.logout(userId, token);
+  }
+
 }
 

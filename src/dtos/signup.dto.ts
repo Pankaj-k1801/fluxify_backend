@@ -27,3 +27,18 @@ export class Login extends Model {
   @property({type: 'string', required: true})
   password: string;
 }
+
+@model()
+export class LogoutDto {
+  @property({
+    type: 'string',
+    required: true,
+  })
+  userId: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  token: string;
+}
