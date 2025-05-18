@@ -30,8 +30,11 @@ export class UserService {
     const existingUser = await this.usersRepository.findOne({
       where: {email: signupData.email},
     });
-    if (existingUser) throw new Error('Email already in use');
 
+    if (existingUser) {
+      // Send 409 Conflict error if email already exists
+      throw new HttpErrors.Conflict('Email already in use');
+    }
     const hashedPassword = await this.passwordService.hashPassword(signupData.password);
     const userId = await this.uniqueIdService.generateNextUserId();
 
