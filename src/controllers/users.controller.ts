@@ -19,7 +19,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Login, LogoutDto, Signup} from '../dtos/signup.dto';
+import {Login, LogoutDto, Signup} from '../dtos/user.dto';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
 import {UserService} from '../services';

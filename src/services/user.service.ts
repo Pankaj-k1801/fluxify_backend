@@ -3,7 +3,7 @@ import {BindingScope, inject, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {randomBytes} from 'crypto';
-import {Login, Signup} from '../dtos/signup.dto';
+import {Login, Signup} from '../dtos/user.dto';
 import {Session, Users} from '../models';
 import {SessionRepository, UsersRepository} from '../repositories';
 import {PasswordService} from './password.service';
