@@ -28,12 +28,19 @@ export class Owner extends Entity {
     type: 'string',
     required: true,
   })
-  ownerName: string;
+  ownerFirstName: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  ownerAdd: string;
+  ownerLastName: string;
+
+  @property({
+    type: 'object',
+    postgresql: {dataType: 'jsonb'},
+  })
+  ownerAdd?: object;
 
   @property({
     type: 'string',
