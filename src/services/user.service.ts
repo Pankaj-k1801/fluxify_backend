@@ -3,8 +3,8 @@ import {BindingScope, inject, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {randomBytes} from 'crypto';
-import {Login, Signup} from '../dtos/user.dto';
-import {Session, Users} from '../models';
+import {Login, Signup, UserDto} from '../dtos/user.dto';
+import {Session} from '../models';
 import {SessionRepository, UsersRepository} from '../repositories';
 import {PasswordService} from './password.service';
 import {UniqueIdService} from './unique-id.service';
@@ -26,7 +26,7 @@ export class UserService {
   ) { }
 
   /* User SignUp  */
-  async signup(signupData: Signup): Promise<Users> {
+  async signup(signupData: Signup): Promise<UserDto> {
     const existingUser = await this.usersRepository.findOne({
       where: {email: signupData.email},
     });
@@ -53,11 +53,13 @@ export class UserService {
       updatedBy: 'system',
     });
 
-    return newUser;
+    // Exclude password before returning
+    const {password, ...safeUser} = newUser;
+    return new UserDto(safeUser);
   }
 
   /* User Login  */
-  async login(loginData: Login): Promise<{token: string; user: Users}> {
+  async login(loginData: Login): Promise<{token: string; user: UserDto}> {
     const {email, password} = loginData;
 
     // Find user by email
@@ -102,9 +104,11 @@ export class UserService {
         expiresAt,
       });
 
+      // Exclude password before returning
+      const {password, ...safeUser} = user;
       return {
         token: existingSession.token,
-        user,
+        user: new UserDto(safeUser),
       };
     }
 
@@ -128,9 +132,11 @@ export class UserService {
     // Re-fetch updated user
     const updatedUser = await this.usersRepository.findById(user.userId);
 
+    const {password: pw, ...safeUser} = updatedUser;
+
     return {
       token,
-      user: updatedUser,
+      user: new UserDto(safeUser),
     };
   }
 

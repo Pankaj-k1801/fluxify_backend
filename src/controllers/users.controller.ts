@@ -19,7 +19,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Login, LogoutDto, Signup} from '../dtos/user.dto';
+import {Login, LogoutDto, Signup, UserDto} from '../dtos/user.dto';
 import {Users} from '../models';
 import {UsersRepository} from '../repositories';
 import {UserService} from '../services';
@@ -168,7 +168,7 @@ export class UsersController {
       },
     })
     signupData: Signup,
-  ): Promise<Users> {
+  ): Promise<UserDto> {
     return this.userService.signup(signupData);
   }
 
@@ -181,7 +181,7 @@ export class UsersController {
           type: 'object',
           properties: {
             token: {type: 'string'},
-            user: getModelSchemaRef(Users),
+            user: getModelSchemaRef(UserDto),
           },
         },
       },
@@ -196,7 +196,7 @@ export class UsersController {
       },
     })
     loginData: Login,
-  ): Promise<{token: string; user: Users}> {
+  ): Promise<{token: string; user: UserDto}> {
     return this.userService.login(loginData);
   }
 
