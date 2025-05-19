@@ -47,7 +47,7 @@ export class UserService {
       isLoggedIn: false,
       isActive: true,
       lastLoginTime: new Date().toISOString(),
-      isOwner: false,
+      isOwner: true,  /* Only Owner will Sign Up and they will add Staff  */
       isRegistered: false, // Make this True when User Registers itself as Owner or Staff
       createdBy: 'system',
       updatedBy: 'system',
