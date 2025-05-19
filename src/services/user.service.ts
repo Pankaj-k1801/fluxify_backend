@@ -125,9 +125,12 @@ export class UserService {
 
     await this.sessionRepository.create(session);
 
+    // Re-fetch updated user
+    const updatedUser = await this.usersRepository.findById(user.userId);
+
     return {
       token,
-      user,
+      user: updatedUser,
     };
   }
 
