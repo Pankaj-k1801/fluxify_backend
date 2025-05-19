@@ -5,7 +5,7 @@ import {HttpErrors} from '@loopback/rest';
 import {randomBytes} from 'crypto';
 import {Login, Signup, UserDto} from '../dtos/user.dto';
 import {Session} from '../models';
-import {SessionRepository, UsersRepository} from '../repositories';
+import {OwnerRepository, SessionRepository, StaffRepository, UsersRepository} from '../repositories';
 import {PasswordService} from './password.service';
 import {UniqueIdService} from './unique-id.service';
 
@@ -17,6 +17,12 @@ export class UserService {
 
     @repository(SessionRepository)
     private sessionRepository: SessionRepository,
+
+    @repository(OwnerRepository)
+    private ownerRepository: OwnerRepository,
+
+    @repository(StaffRepository)
+    private staffRepository: StaffRepository,
 
     @inject('services.UniqueIdService')
     private uniqueIdService: UniqueIdService,
@@ -66,6 +72,35 @@ export class UserService {
     const user = await this.usersRepository.findOne({where: {email}});
     if (!user) {
       throw new HttpErrors.Unauthorized('No user with this Email');
+    }
+
+    /* Checking if User already exists in Owner or Staff Table */
+    // Find User in Owner
+    const owner = await this.ownerRepository.findOne({where: {userId: user.userId}});
+    if (owner) {
+      // if user is Registered then updated isRegistered Field to true
+      await this.usersRepository.updateById(user.userId, {
+        isRegistered: true,
+        isOwner: true, /* True if User is Owner */
+        upDatedDate: new Date().toISOString(), // Optional: if you're maintaining updated date
+      });
+
+      // Optional: refresh user object after update
+      user.isRegistered = true;
+    }
+    else { /* Find User in Staff */
+      const staff = await this.staffRepository.findOne({where: {userId: user.userId}});
+      if (staff) {
+        // if user is Registered then updated isRegistered Field to true
+        await this.usersRepository.updateById(user.userId, {
+          isRegistered: true,
+          isOwner: false, /* False if User is Staff */
+          upDatedDate: new Date().toISOString(), // Optional: if you're maintaining updated date
+        });
+
+        // Optional: refresh user object after update
+        user.isRegistered = true;
+      }
     }
 
     /* Checking if User is Active or Not  */
