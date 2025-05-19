@@ -75,6 +75,12 @@ export class Users extends Entity {
     type: 'boolean',
     required: true,
   })
+  isRegistered?: boolean;
+
+  @property({
+    type: 'boolean',
+    required: true,
+  })
   isActive?: boolean;
 
   /* For Logs */

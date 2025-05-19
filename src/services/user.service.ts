@@ -48,6 +48,7 @@ export class UserService {
       isActive: true,
       lastLoginTime: new Date().toISOString(),
       isOwner: false,
+      isRegistered: false, // Make this True when User Registers itself as Owner or Staff
       createdBy: 'system',
       updatedBy: 'system',
     });
