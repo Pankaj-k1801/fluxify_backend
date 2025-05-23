@@ -8,7 +8,9 @@ import {
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
+import {setupSessionCleanupCron} from './cron-jobs/session-cleanup-cron';
 import {MySequence} from './sequence';
+import {SessionCleanupService} from './services/session-cleanup.service';
 
 export {ApplicationConfig};
 
@@ -23,6 +25,11 @@ export class FluxifyBackendApplication extends BootMixin(
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
+
+    this.bind('services.SessionCleanupService').toClass(SessionCleanupService);
+
+    // Run cron job
+    setupSessionCleanupCron(this);
 
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
