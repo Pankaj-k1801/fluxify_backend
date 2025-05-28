@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,29 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  HttpErrors,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Organization} from '../models';
 import {OrganizationRepository} from '../repositories';
+import {OrganizationService} from '../services';
 
 export class OrganizationController {
   constructor(
     @repository(OrganizationRepository)
-    public organizationRepository : OrganizationRepository,
-  ) {}
+    public organizationRepository: OrganizationRepository,
+
+    @service(OrganizationService)
+    private organizationService: OrganizationService,
+  ) { }
 
   @post('/organizations')
   @response(200, {
@@ -37,7 +43,7 @@ export class OrganizationController {
         'application/json': {
           schema: getModelSchemaRef(Organization, {
             title: 'NewOrganization',
-            
+
           }),
         },
       },
@@ -147,4 +153,43 @@ export class OrganizationController {
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.organizationRepository.deleteById(id);
   }
+
+  /* Find Organization exists or not */
+  @post('/organizations/is-registered')
+  @response(200, {
+    description: 'Check if organization is registered for user',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            isRegistered: {type: 'boolean'},
+          },
+        },
+      },
+    },
+  })
+  async findIsOrganizationRegistered(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['userId'],
+            properties: {
+              userId: {type: 'string'},
+            },
+          },
+        },
+      },
+    })
+    body: {userId: string},
+  ): Promise<{isRegistered: boolean}> {
+    const {userId} = body;
+    if (!userId) {
+      throw new HttpErrors.BadRequest('userId is required');
+    }
+    return this.organizationService.findIsOrganizationRegistered(userId);
+  }
+
 }

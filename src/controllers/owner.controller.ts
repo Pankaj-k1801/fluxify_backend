@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,29 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  HttpErrors,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {OwnerRegistrationDto} from '../dtos/owner.dto';
 import {Owner} from '../models';
 import {OwnerRepository} from '../repositories';
+import {OwnerService} from '../services';
 
 export class OwnerController {
   constructor(
     @repository(OwnerRepository)
-    public ownerRepository : OwnerRepository,
-  ) {}
+    public ownerRepository: OwnerRepository,
+    @service(OwnerService)
+    private ownerService: OwnerService,
+  ) { }
 
   @post('/owners')
   @response(200, {
@@ -37,7 +43,7 @@ export class OwnerController {
         'application/json': {
           schema: getModelSchemaRef(Owner, {
             title: 'NewOwner',
-            
+
           }),
         },
       },
@@ -146,5 +152,36 @@ export class OwnerController {
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.ownerRepository.deleteById(id);
+  }
+
+  @post('/owners/register', {
+    responses: {
+      '200': {
+        description: 'Owner Registration Successful',
+        content: {'application/json': {schema: {'x-ts-type': Owner}}},
+      },
+    },
+  })
+  async registerOwner(
+    @requestBody({
+      description: 'Owner registration data',
+      required: true,
+      content: {
+        'application/json': {schema: {'x-ts-type': OwnerRegistrationDto}},
+      },
+    })
+    ownerData: OwnerRegistrationDto,
+
+    @param.query.string('userId', {
+      description: 'User ID for registration',
+      required: true,
+    })
+    userId: string,
+  ): Promise<Owner> {
+    if (!userId) {
+      throw new HttpErrors.BadRequest('userId query parameter is required.');
+    }
+
+    return this.ownerService.ownerRegistration(ownerData, userId);
   }
 }

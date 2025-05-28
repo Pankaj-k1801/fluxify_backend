@@ -2,7 +2,7 @@
 import {Model, model, property} from '@loopback/repository';
 
 @model()
-export class Signup extends Model {
+export class SignupDto extends Model {
   @property({type: 'string', required: true})
   firstName: string;
 
@@ -20,7 +20,7 @@ export class Signup extends Model {
 }
 
 @model()
-export class Login extends Model {
+export class LoginDto extends Model {
   @property({type: 'string', required: true})
   email: string;
 

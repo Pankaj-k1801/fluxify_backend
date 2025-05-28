@@ -3,8 +3,8 @@ import {BindingScope, inject, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import {randomBytes} from 'crypto';
-import {Login, Signup, UserDto} from '../dtos/user.dto';
-import {Session} from '../models';
+import {LoginDto, SignupDto, UserDto} from '../dtos/user.dto';
+import {Session, Users} from '../models';
 import {OwnerRepository, SessionRepository, StaffRepository, UsersRepository} from '../repositories';
 import {PasswordService} from './password.service';
 import {UniqueIdService} from './unique-id.service';
@@ -32,7 +32,7 @@ export class UserService {
   ) { }
 
   /* User SignUp  */
-  async signup(signupData: Signup): Promise<UserDto> {
+  async signup(signupData: SignupDto): Promise<UserDto> {
     const existingUser = await this.usersRepository.findOne({
       where: {email: signupData.email},
     });
@@ -65,7 +65,7 @@ export class UserService {
   }
 
   /* User Login  */
-  async login(loginData: Login): Promise<{token: string; user: UserDto}> {
+  async login(loginData: LoginDto): Promise<{token: string; user: UserDto}> {
     const {email, password} = loginData;
 
     // Find user by email
@@ -74,36 +74,34 @@ export class UserService {
       throw new HttpErrors.Unauthorized('No user with this Email');
     }
 
-    /* Checking if User already exists in Owner or Staff Table */
-    // Find User in Owner
+    let updatedFields: Partial<Users> = {};
+
+    // Check if user is an Owner
     const owner = await this.ownerRepository.findOne({where: {userId: user.userId}});
     if (owner) {
-      // if user is Registered then updated isRegistered Field to true
-      await this.usersRepository.updateById(user.userId, {
+      updatedFields = {
         isRegistered: true,
-        isOwner: true, /* True if User is Owner */
-        upDatedDate: new Date().toISOString(), // Optional: if you're maintaining updated date
-      });
-
-      // Optional: refresh user object after update
-      user.isRegistered = true;
-    }
-    else { /* Find User in Staff */
+        isOwner: true,
+        upDatedDate: new Date().toISOString(),
+      };
+    } else {
+      // Else check if user is a Staff
       const staff = await this.staffRepository.findOne({where: {userId: user.userId}});
       if (staff) {
-        // if user is Registered then updated isRegistered Field to true
-        await this.usersRepository.updateById(user.userId, {
+        updatedFields = {
           isRegistered: true,
-          isOwner: false, /* False if User is Staff */
-          upDatedDate: new Date().toISOString(), // Optional: if you're maintaining updated date
-        });
-
-        // Optional: refresh user object after update
-        user.isRegistered = true;
+          isOwner: false,
+          upDatedDate: new Date().toISOString(),
+        };
       }
     }
 
-    /* Checking if User is Active or Not  */
+    // Update user if needed
+    if (Object.keys(updatedFields).length > 0) {
+      await this.usersRepository.updateById(user.userId, updatedFields);
+    }
+
+    // ❗ Ensure user is active
     if (!user.isActive) {
       throw new HttpErrors.Unauthorized('User is Not Active');
     }
@@ -114,60 +112,56 @@ export class UserService {
       throw new HttpErrors.Unauthorized('Invalid Password');
     }
 
-    // Update isLoggedIn and lastLoginTime in Users table
+    // Update login fields
     await this.usersRepository.updateById(user.userId, {
       isLoggedIn: true,
       lastLoginTime: new Date().toISOString(),
     });
 
-
-    // Check if an active session already exists
+    // Check for existing session
     const existingSession = await this.sessionRepository.findOne({
       where: {
         userId: user.userId,
-        expiresAt: {gt: new Date()}, // session not expired
+        expiresAt: {gt: new Date()},
       },
     });
 
-    // Create session entry
     const now = new Date();
     const expiresAt = new Date(now.getTime() + 1000 * 60 * 60 * 12); // 12 hours
+    let token = '';
 
     if (existingSession) {
-      // Extend session expiry time
+      // Extend session
       await this.sessionRepository.updateById(existingSession.userId, {
         expiresAt,
       });
-
-      // Exclude password before returning
-      const {password, ...safeUser} = user;
-      return {
-        token: existingSession.token,
-        user: new UserDto(safeUser),
+      token = existingSession.token;
+    } else {
+      // Create new session
+      token = randomBytes(32).toString('hex');
+      const session: Partial<Session> = {
+        userId: user.userId,
+        token,
+        orgId: 'org-0000',
+        createdAt: now,
+        expiresAt,
+        sessionData: {
+          email: user.email,
+        },
       };
+      await this.sessionRepository.create(session);
     }
 
-    // Otherwise, create a new session
-    // Generate token (Random bytes used as Token for Security)
-    const token = randomBytes(32).toString('hex');
-
-    const session: Partial<Session> = {
-      userId: user.userId,
-      token: token,
-      orgId: 'org-1000', // Default Org Id for Now Later we will use Actual OrgId
-      createdAt: now,
-      expiresAt,
-      sessionData: {
-        email: user.email,
-      },
+    // Safely combine updated fields with user (in-memory)
+    const responseUser = {
+      ...user,
+      ...updatedFields,
+      isLoggedIn: true,
+      lastLoginTime: new Date().toISOString(),
     };
 
-    await this.sessionRepository.create(session);
-
-    // Re-fetch updated user
-    const updatedUser = await this.usersRepository.findById(user.userId);
-
-    const {password: pw, ...safeUser} = updatedUser;
+    // Return user DTO without password
+    const {password: pw, ...safeUser} = responseUser;
 
     return {
       token,
