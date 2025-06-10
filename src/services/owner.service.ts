@@ -81,6 +81,13 @@ export class OwnerService {
       {userId: userId}, // where filter
     );
 
+    /* Only Perform if user is New and Unregistered */
+    // 7. Update orgId in Users where userId matches
+    await this.usersRepository.updateAll(
+      {orgId: orgId},   // data to update
+      {userId: userId}, // where filter
+    );
+
     // Update isRegistered Field in Users to true when Organization is Also Registered
     // await this.usersRepository.updateAll(
     //   {isRegistered: true},   // data to update

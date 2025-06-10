@@ -50,6 +50,7 @@ export class UserService {
       userId,
       createdDate: new Date().toISOString(),
       upDatedDate: new Date().toISOString(),
+      orgId: 'org-0000', // Temporary
       isLoggedIn: false,
       isActive: true,
       lastLoginTime: new Date().toISOString(),
@@ -142,7 +143,7 @@ export class UserService {
       const session: Partial<Session> = {
         userId: user.userId,
         token,
-        orgId: 'org-0000',
+        orgId: user.orgId,
         createdAt: now,
         expiresAt,
         sessionData: {

@@ -11,6 +11,12 @@ export class Users extends Entity {
 
   @property({
     type: 'string',
+    required: true,
+  })
+  orgId: string;
+
+  @property({
+    type: 'string',
     required: true
   })
   firstName: string;
