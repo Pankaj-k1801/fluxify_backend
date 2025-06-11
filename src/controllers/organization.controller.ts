@@ -19,6 +19,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
+import {AddOrganizationRequest} from '../dtos/organization.dto';
 import {Organization} from '../models';
 import {OrganizationRepository} from '../repositories';
 import {OrganizationService} from '../services';
@@ -190,6 +191,27 @@ export class OrganizationController {
       throw new HttpErrors.BadRequest('userId is required');
     }
     return this.organizationService.findIsOrganizationRegistered(userId);
+  }
+
+  @post('/organization/add', {
+    responses: {
+      '200': {
+        description: 'New Organization Created',
+        content: {'application/json': {schema: {'x-ts-type': Organization}}},
+      },
+    },
+  })
+  async addOrganization(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {'x-ts-type': AddOrganizationRequest},
+        },
+      },
+    })
+    body: AddOrganizationRequest,
+  ): Promise<Organization> {
+    return this.organizationService.addOrganization(body);
   }
 
 }

@@ -49,6 +49,9 @@ export class UserDto extends Model {
   userId: string;
 
   @property({type: 'string', required: true})
+  orgId: string;
+
+  @property({type: 'string', required: true})
   firstName: string;
 
   @property({type: 'string', required: true})

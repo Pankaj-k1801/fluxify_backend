@@ -1,5 +1,7 @@
 import {BindingScope, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
+import {AddOrganizationRequest} from '../dtos/organization.dto';
+import {Organization} from '../models';
 import {OrganizationRepository, SessionRepository, UsersRepository} from '../repositories';
 
 @injectable({scope: BindingScope.TRANSIENT})
@@ -39,6 +41,40 @@ export class OrganizationService {
 
     // 4. Return the result
     return {isRegistered};
+  }
+
+  async addOrganization(data: AddOrganizationRequest): Promise<Organization> {
+    const orgAdd = {
+      shopNo: data.shopNo,
+      buildingName: data.buildingName,
+      street: data.street,
+      area: data.area,
+      landmark: data.landmark,
+      city: data.city,
+      district: data.district,
+      state: data.state,
+      country: data.country,
+      pincode: data.pincode,
+    };
+
+    const newOrg = await this.organizationRepository.create({
+      orgId: data.orgId,
+      orgName: data.orgName,
+      orgAdd: orgAdd,
+      orgEmail: data.orgEmail,
+      orgPhone: data.orgPhone,
+      isMultipleBranches: false,
+      nextbranchId: `${data.orgId}-branch-1000`,
+      createdDate: new Date().toISOString(),
+      upDatedDate: new Date().toISOString(),
+      createdBy: 'system',
+      updatedBy: 'system',
+    });
+
+    /* Also Add this Data in Branch Unit  */
+    /* And Add a way to update increment branch Id */
+
+    return newOrg;
   }
 
 }

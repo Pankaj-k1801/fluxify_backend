@@ -29,7 +29,7 @@ export class Organization extends Entity {
     type: 'object',
     postgresql: {dataType: 'jsonb'},
   })
-  orgAdd: string;
+  orgAdd: object;
 
   @property({
     type: 'string',
