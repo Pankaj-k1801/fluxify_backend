@@ -1,8 +1,9 @@
-import {BindingScope, injectable} from '@loopback/core';
+import {BindingScope, inject, injectable} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {AddOrganizationRequest} from '../dtos/organization.dto';
 import {Organization} from '../models';
-import {OrganizationRepository, SessionRepository, UsersRepository} from '../repositories';
+import {BranchUnitRepository, OrganizationRepository, SessionRepository, UsersRepository} from '../repositories';
+import {UniqueIdService} from './unique-id.service';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class OrganizationService {
@@ -16,6 +17,12 @@ export class OrganizationService {
 
     @repository(OrganizationRepository)
     private organizationRepository: OrganizationRepository,
+
+    @repository(BranchUnitRepository)
+    private branchUnitRepository: BranchUnitRepository,
+
+    @inject('services.UniqueIdService')
+    private uniqueIdService: UniqueIdService,
   ) { }
 
   /*
@@ -57,6 +64,8 @@ export class OrganizationService {
       pincode: data.pincode,
     };
 
+    const intialBranchId = `${data.orgId}-branch-1000`;
+
     const newOrg = await this.organizationRepository.create({
       orgId: data.orgId,
       orgName: data.orgName,
@@ -64,14 +73,42 @@ export class OrganizationService {
       orgEmail: data.orgEmail,
       orgPhone: data.orgPhone,
       isMultipleBranches: false,
-      nextbranchId: `${data.orgId}-branch-1000`,
+      nextbranchId: intialBranchId,
       createdDate: new Date().toISOString(),
       upDatedDate: new Date().toISOString(),
       createdBy: 'system',
       updatedBy: 'system',
     });
 
-    /* Also Add this Data in Branch Unit  */
+    // 3. Generate next BranchId
+    const nextBranchId = await this.uniqueIdService.generateNextBranchId(data.orgId);
+
+    /* Adding Organization as first Branch in BranchUnit */
+    await this.branchUnitRepository.create({
+      orgId: data.orgId,
+      branchId: nextBranchId,
+      branchName: data.orgName,
+      branchAdd: orgAdd,
+      branchPhone: data.orgPhone,
+      branchEmail: data.orgEmail,
+      branchManagerStaffId: null,
+      noOfStaff: 1,
+      nextBrandId: 'brand-1000',
+      nextproductTypeId: 'productType-1000',
+      nextproductId: 'product-1000',
+      nextproductUnitId: 'productUnit-1000',
+      nextDiscountId: 'discount-1000',
+      nextpaymentInfoId: 'paymentInfo-1000',
+      nextpurchasedBillId: 'purchasedBill-1000',
+      nextsellBillId: 'sellBill-1000',
+      nextsupplierId: 'supplier-1000',
+      nextcustomerId: 'customer-1000',
+      nextStaffId: 'staff-1000',
+      createdDate: new Date().toISOString(),
+      upDatedDate: new Date().toISOString(),
+      createdBy: 'system',
+      updatedBy: 'system',
+    });
 
     return newOrg;
   }

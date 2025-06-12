@@ -33,10 +33,10 @@ export class BranchUnit extends Entity {
   branchName: string;
 
   @property({
-    type: 'string',
-    required: true
+    type: 'object',
+    postgresql: {dataType: 'jsonb'},
   })
-  branchAdd: string;
+  branchAdd: object;
 
   @property({
     type: 'string',
@@ -52,8 +52,10 @@ export class BranchUnit extends Entity {
 
   @property({
     type: 'string',
+    required: false,
+    postgresql: {nullable: true},
   })
-  branchManagerStaffId: string;
+  branchManagerStaffId?: string | null;
 
   @property({
     type: 'number',
