@@ -159,6 +159,7 @@ export class UserService {
       ...updatedFields,
       isLoggedIn: true,
       lastLoginTime: new Date().toISOString(),
+      expiresAt: expiresAt
     };
 
     // Return user DTO without password

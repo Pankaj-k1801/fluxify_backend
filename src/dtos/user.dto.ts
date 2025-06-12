@@ -69,6 +69,9 @@ export class UserDto extends Model {
   @property({type: 'string'})
   lastLoginTime?: string;
 
+  @property({type: 'date'})
+  expiresAt: Date;
+
   @property({type: 'boolean'})
   isOwner?: boolean;
 
