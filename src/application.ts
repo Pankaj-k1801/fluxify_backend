@@ -1,3 +1,4 @@
+import {AuthenticationComponent, registerAuthenticationStrategy} from '@loopback/authentication';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
@@ -8,6 +9,7 @@ import {
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
+import {SessionStrategy} from './authentication-strategies/session-strategy';
 import {setupSessionCleanupCron} from './cron-jobs/session-cleanup-cron';
 import {MySequence} from './sequence';
 import {SessionCleanupService} from './services/session-cleanup.service';
@@ -22,6 +24,10 @@ export class FluxifyBackendApplication extends BootMixin(
 
     // Set up the custom sequence
     this.sequence(MySequence);
+
+    // Set up authentication
+    this.component(AuthenticationComponent);
+    registerAuthenticationStrategy(this, SessionStrategy);
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));

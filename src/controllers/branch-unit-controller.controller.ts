@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,25 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {BranchUnit} from '../models';
 import {BranchUnitRepository} from '../repositories';
 
+@authenticate('session')
 export class BranchUnitControllerController {
   constructor(
     @repository(BranchUnitRepository)
-    public branchUnitRepository : BranchUnitRepository,
-  ) {}
+    public branchUnitRepository: BranchUnitRepository,
+  ) { }
 
   @post('/branch-units')
   @response(200, {
@@ -37,7 +39,7 @@ export class BranchUnitControllerController {
         'application/json': {
           schema: getModelSchemaRef(BranchUnit, {
             title: 'NewBranchUnit',
-            
+
           }),
         },
       },

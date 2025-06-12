@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Setup} from '../models';
 import {SetupRepository} from '../repositories';
 
+@authenticate('session')
 export class SetupController {
   constructor(
     @repository(SetupRepository)
-    public setupRepository : SetupRepository,
-  ) {}
+    public setupRepository: SetupRepository,
+  ) { }
 
   @post('/setups')
   @response(200, {
@@ -37,7 +39,7 @@ export class SetupController {
         'application/json': {
           schema: getModelSchemaRef(Setup, {
             title: 'NewSetup',
-            
+
           }),
         },
       },

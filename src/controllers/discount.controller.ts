@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,25 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {Discount} from '../models';
 import {DiscountRepository} from '../repositories';
 
+@authenticate('session')
 export class DiscountController {
   constructor(
     @repository(DiscountRepository)
-    public discountRepository : DiscountRepository,
-  ) {}
+    public discountRepository: DiscountRepository,
+  ) { }
 
   @post('/discounts')
   @response(200, {
@@ -37,7 +39,7 @@ export class DiscountController {
         'application/json': {
           schema: getModelSchemaRef(Discount, {
             title: 'NewDiscount',
-            
+
           }),
         },
       },

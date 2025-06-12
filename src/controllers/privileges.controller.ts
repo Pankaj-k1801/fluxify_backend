@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Privileges} from '../models';
 import {PrivilegesRepository} from '../repositories';
 
+@authenticate('session')
 export class PrivilegesController {
   constructor(
     @repository(PrivilegesRepository)
-    public privilegesRepository : PrivilegesRepository,
-  ) {}
+    public privilegesRepository: PrivilegesRepository,
+  ) { }
 
   @post('/privileges')
   @response(200, {
@@ -37,7 +39,7 @@ export class PrivilegesController {
         'application/json': {
           schema: getModelSchemaRef(Privileges, {
             title: 'NewPrivileges',
-            
+
           }),
         },
       },

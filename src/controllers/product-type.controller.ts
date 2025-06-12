@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {ProductType} from '../models';
 import {ProductTypeRepository} from '../repositories';
 
+@authenticate('session')
 export class ProductTypeController {
   constructor(
     @repository(ProductTypeRepository)
-    public productTypeRepository : ProductTypeRepository,
-  ) {}
+    public productTypeRepository: ProductTypeRepository,
+  ) { }
 
   @post('/product-types')
   @response(200, {
@@ -37,7 +39,7 @@ export class ProductTypeController {
         'application/json': {
           schema: getModelSchemaRef(ProductType, {
             title: 'NewProductType',
-            
+
           }),
         },
       },

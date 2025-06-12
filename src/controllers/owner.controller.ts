@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -24,6 +25,7 @@ import {Owner} from '../models';
 import {OwnerRepository} from '../repositories';
 import {OwnerService} from '../services';
 
+@authenticate('session')
 export class OwnerController {
   constructor(
     @repository(OwnerRepository)

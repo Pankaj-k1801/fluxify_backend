@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Subscription} from '../models';
 import {SubscriptionRepository} from '../repositories';
 
+@authenticate('session')
 export class SubscriptionController {
   constructor(
     @repository(SubscriptionRepository)
-    public subscriptionRepository : SubscriptionRepository,
-  ) {}
+    public subscriptionRepository: SubscriptionRepository,
+  ) { }
 
   @post('/subscriptions')
   @response(200, {
@@ -37,7 +39,7 @@ export class SubscriptionController {
         'application/json': {
           schema: getModelSchemaRef(Subscription, {
             title: 'NewSubscription',
-            
+
           }),
         },
       },

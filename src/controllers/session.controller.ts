@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Session} from '../models';
 import {SessionRepository} from '../repositories';
 
+@authenticate('session')
 export class SessionController {
   constructor(
     @repository(SessionRepository)
-    public sessionRepository : SessionRepository,
-  ) {}
+    public sessionRepository: SessionRepository,
+  ) { }
 
   @post('/sessions')
   @response(200, {
@@ -37,7 +39,7 @@ export class SessionController {
         'application/json': {
           schema: getModelSchemaRef(Session, {
             title: 'NewSession',
-            
+
           }),
         },
       },

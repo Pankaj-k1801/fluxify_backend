@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Suppliers} from '../models';
 import {SuppliersRepository} from '../repositories';
 
+@authenticate('session')
 export class SuppliersController {
   constructor(
     @repository(SuppliersRepository)
-    public suppliersRepository : SuppliersRepository,
-  ) {}
+    public suppliersRepository: SuppliersRepository,
+  ) { }
 
   @post('/suppliers')
   @response(200, {
@@ -37,7 +39,7 @@ export class SuppliersController {
         'application/json': {
           schema: getModelSchemaRef(Suppliers, {
             title: 'NewSuppliers',
-            
+
           }),
         },
       },

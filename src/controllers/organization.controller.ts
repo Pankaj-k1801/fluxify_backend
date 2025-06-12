@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -24,6 +25,7 @@ import {Organization} from '../models';
 import {OrganizationRepository} from '../repositories';
 import {OrganizationService} from '../services';
 
+@authenticate('session')
 export class OrganizationController {
   constructor(
     @repository(OrganizationRepository)
@@ -156,6 +158,8 @@ export class OrganizationController {
   }
 
   /* Find Organization exists or not */
+  /* Runs Before Login to Redirect Logged In user to Desginated Page in Client Side */
+  @authenticate.skip()
   @post('/organizations/is-registered')
   @response(200, {
     description: 'Check if organization is registered for user',

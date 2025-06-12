@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -24,6 +25,7 @@ import {Users} from '../models';
 import {UsersRepository} from '../repositories';
 import {UserService} from '../services';
 
+@authenticate('session')
 export class UsersController {
   constructor(
     @repository(UsersRepository)
@@ -154,6 +156,7 @@ export class UsersController {
     await this.usersRepository.deleteById(id);
   }
 
+  @authenticate.skip()
   @post('/signup')
   @response(200, {
     description: 'Signup new user',
@@ -172,6 +175,7 @@ export class UsersController {
     return this.userService.signup(signupData);
   }
 
+  @authenticate.skip()
   @post('/login')
   @response(200, {
     description: 'Login existing user',
@@ -200,6 +204,7 @@ export class UsersController {
     return this.userService.login(loginData);
   }
 
+  @authenticate.skip()
   @post('/logout', {
     responses: {
       '200': {

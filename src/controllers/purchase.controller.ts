@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -20,11 +21,12 @@ import {
 import {Purchase} from '../models';
 import {PurchaseRepository} from '../repositories';
 
+@authenticate('session')
 export class PurchaseController {
   constructor(
     @repository(PurchaseRepository)
-    public purchaseRepository : PurchaseRepository,
-  ) {}
+    public purchaseRepository: PurchaseRepository,
+  ) { }
 
   @post('/purchases')
   @response(200, {
@@ -37,7 +39,7 @@ export class PurchaseController {
         'application/json': {
           schema: getModelSchemaRef(Purchase, {
             title: 'NewPurchase',
-            
+
           }),
         },
       },

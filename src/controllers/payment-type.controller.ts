@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -7,24 +8,25 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
 import {PaymentType} from '../models';
 import {PaymentTypeRepository} from '../repositories';
 
+@authenticate('session')
 export class PaymentTypeController {
   constructor(
     @repository(PaymentTypeRepository)
-    public paymentTypeRepository : PaymentTypeRepository,
-  ) {}
+    public paymentTypeRepository: PaymentTypeRepository,
+  ) { }
 
   @post('/payment-types')
   @response(200, {
@@ -37,7 +39,7 @@ export class PaymentTypeController {
         'application/json': {
           schema: getModelSchemaRef(PaymentType, {
             title: 'NewPaymentType',
-            
+
           }),
         },
       },
