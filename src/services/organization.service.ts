@@ -72,7 +72,6 @@ export class OrganizationService {
     });
 
     /* Also Add this Data in Branch Unit  */
-    /* And Add a way to update increment branch Id */
 
     return newOrg;
   }

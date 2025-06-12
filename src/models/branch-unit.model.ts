@@ -52,7 +52,6 @@ export class BranchUnit extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   branchManagerStaffId: string;
 
