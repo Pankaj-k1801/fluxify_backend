@@ -204,7 +204,6 @@ export class UsersController {
     return this.userService.login(loginData);
   }
 
-  @authenticate.skip()
   @post('/logout', {
     responses: {
       '200': {
